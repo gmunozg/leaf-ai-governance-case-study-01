@@ -55,7 +55,7 @@ export function LibraryBrowser({ items, categories, labels, locale, placeholderL
       ) : (
         <ul className="lib-list">
           {filtered.map((it) => (
-            <li key={it.slug} className={`lib-item${it.status === "in-preparation" ? " lib-item--prep" : ""}`}>
+            <li key={it.slug} data-category={it.category} className={`lib-item${it.status === "in-preparation" ? " lib-item--prep" : ""}`}>
               <div className="lib-item__thumb">
                 <Media tone={it.tone} locale={locale} placeholderLabel={placeholderLabel} ratio="square" reveal={false} compact />
               </div>

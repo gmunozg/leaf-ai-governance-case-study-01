@@ -7,7 +7,7 @@ import { Arrow } from "./Arrow";
 
 export function ProductCard({ card, locale, placeholderLabel, ratio = "portrait", delay = 0 }: { card: CardData; locale: Locale; placeholderLabel: string; ratio?: "portrait" | "tall" | "square" | "land"; delay?: number }) {
   return (
-    <article className="pcard" data-reveal style={{ "--d": delay } as React.CSSProperties}>
+    <article className="pcard" data-collection={card.collection} data-reveal style={{ "--d": delay } as React.CSSProperties}>
       <div className="pcard__media">
         {card.status !== "available" ? <StatusPill status={card.status} label={card.statusLabel} /> : null}
         <Media image={card.image} tone={card.tone} locale={locale} brief={card.brief} placeholderLabel={placeholderLabel} ratio={ratio} sizes="(min-width: 1100px) 30vw, (min-width: 640px) 45vw, 92vw" reveal={false} compact />
