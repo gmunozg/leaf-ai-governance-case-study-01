@@ -77,7 +77,7 @@ export function growRoots({ seed = 7, x, y, length, width, maxOrder = 3, bounds 
     for (let p = 0; p < pieces; p++) {
       const slice = pts.slice(p * per, Math.min(pts.length, (p + 1) * per + 1));
       if (slice.length < 2) continue;
-      const taper = Math.pow(1 - p / (pieces + 0.2), 1.6);
+      const taper = order === 0 ? Math.max(0.55, Math.pow(1 - p / (pieces + 0.2), 1.6)) : Math.pow(1 - p / (pieces + 0.2), 1.6);
       segs.push({ d: smooth(slice), w: r1(Math.max(0.5, w * taper) * 10) / 10, s: start + (dur * p) / pieces, t: dur / pieces, o: order });
     }
 

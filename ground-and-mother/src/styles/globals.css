@@ -437,6 +437,7 @@ figure, blockquote { margin: 0; }
   margin-bottom: -0.2em;
   color: var(--gm-on-dark);
   user-select: none;
+  position: relative; z-index: 4; /* the root network weaves behind the wordmark */
 }
 .footer-mark .amp { font-style: italic; color: var(--gm-yolk); font-variation-settings: "SOFT" 100, "WONK" 1; }
 .footer-legal { border-top: 1px solid var(--gm-rule-on-dark); margin-top: clamp(3rem, 7vw, 6rem); padding-block: 1.5rem 0; display: grid; gap: 0.75rem; font-size: 0.82rem; color: var(--gm-on-dark-muted); }
@@ -1199,3 +1200,43 @@ a:hover .media-inner, .media:hover .media-inner { transform: scale(1.035); }
 .site-header[data-dark="true"] .nav-desktop a[aria-current="page"] { color: #d9a46a; }
 .site-header[data-dark="true"] .lang-switch a { color: var(--gm-on-dark-muted); }
 .site-header[data-dark="true"] .lang-switch a[aria-current="true"], .site-header[data-dark="true"] .lang-switch a:hover { color: var(--gm-on-dark); }
+
+/* ═══════════════════════════ The botanical plate — one specimen, hero to footer ═══════════════════════════ */
+.plate { position: absolute; left: 0; top: 0; width: 100%; z-index: 3; pointer-events: none; overflow: hidden; contain: layout paint; }
+.plate__tile { position: absolute; left: 0; display: block; overflow: hidden; }
+.plate { --ink: #33382a; --paper-core: var(--gm-paper); }
+.plate-ink { --stroke: var(--ink); --core: var(--paper-core); }
+.plate-light { --stroke: #efe5cd; --core: var(--gm-forest-deep); }
+.plate-light .o1 { stroke-opacity: 0.8; }
+.plate-light .o2 { stroke-opacity: 0.62; }
+.plate-light .o3 { stroke-opacity: 0.48; }
+.plate-light .o4 { stroke-opacity: 0.38; }
+.plate path[pathLength] {
+  fill: none; stroke: var(--stroke); stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: calc(1 - clamp(0, (var(--g, 0) - var(--s)) / var(--t), 1));
+}
+.plate .o0 { stroke-opacity: 0.82; }
+.plate path.core { stroke: var(--core); stroke-opacity: 1; }
+.plate .o1 { stroke-opacity: 0.6; }
+.plate .o2 { stroke-opacity: 0.45; }
+.plate .o3 { stroke-opacity: 0.34; }
+.plate .o4 { stroke-opacity: 0.26; }
+.plate .hatch, .plate .hair, .plate .hyph {
+  fill: none; stroke: var(--stroke); stroke-linecap: round;
+  opacity: clamp(0, (var(--g, 0) - var(--s)) / var(--t), 1);
+}
+.plate .hatch { stroke-width: 0.6; stroke-opacity: 0.55; }
+.plate .hair { stroke-width: 0.45; stroke-opacity: 0.45; }
+.plate .hyph { stroke-width: 1.1; stroke-opacity: 0.5; }
+.plate .ann { opacity: clamp(0, (var(--g, 0) - var(--s)) / var(--t), 1); transition: opacity 0.4s; }
+.plate .ann path { fill: none; stroke: var(--stroke); stroke-width: 0.6; stroke-opacity: 0.55; stroke-dasharray: 2 2.5; }
+.plate .ann circle { fill: var(--stroke); fill-opacity: 0.6; }
+.plate .ann text { fill: var(--stroke); fill-opacity: 0.72; font-family: var(--gm-serif); font-style: italic; letter-spacing: 0.01em; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.plate .ring { fill: color-mix(in srgb, var(--core) 92%, transparent); stroke: var(--stroke); stroke-width: 0.9; stroke-opacity: 0.6; fill-opacity: 1; }
+.plate .ring--in { fill: none; stroke-width: 0.5; }
+.plate .ann circle.ring { fill: var(--core); fill-opacity: 1; }
+.plate .mag { fill: none; stroke: var(--stroke); stroke-linecap: round; stroke-opacity: 0.75; }
+.plate path.mag--core { stroke: var(--core); stroke-opacity: 1; }
+.plate .mag--hair { stroke-width: 0.6; stroke-opacity: 0.6; }
+@media print { .plate { display: none; } }

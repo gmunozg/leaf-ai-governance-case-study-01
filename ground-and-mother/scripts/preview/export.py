@@ -61,6 +61,7 @@ shutil.copy(PUB+'/textures/soil.jpg',OUT+'/textures/soil.jpg')
 os.makedirs(OUT+'/assets',exist_ok=True)
 open(OUT+'/assets/site.css','w').write(css)
 shutil.copy(os.path.join(HERE,'preview.js'),OUT+'/assets/preview.js')
+shutil.copy(os.path.join(HERE,'plate.js'),OUT+'/assets/plate.js')
 shutil.copy(PUB+'/icon.svg',OUT+'/icon.svg')
 print('css KB',len(css)//1024, 'fonts kept', css.count('data:font'))
 
@@ -84,7 +85,7 @@ for u,body in pages.items():
     f=file_for(u)
     h=transform(body,f)
     css_tag='<link rel="stylesheet" href="'+posixpath.relpath('assets/site.css',posixpath.dirname(f))+'"/>'
-    js_tag='<script src="'+posixpath.relpath('assets/preview.js',posixpath.dirname(f))+'"></script>'
+    js_tag='<script src="'+posixpath.relpath('assets/plate.js',posixpath.dirname(f))+'"></script><script src="'+posixpath.relpath('assets/preview.js',posixpath.dirname(f))+'"></script>'
     h=h.replace('</head>',css_tag+'</head>',1).replace('</body>',js_tag+'</body>',1)
     os.makedirs(os.path.dirname(OUT+'/'+f),exist_ok=True)
     open(OUT+'/'+f,'w').write(h)
@@ -96,7 +97,7 @@ body=re.search(r'<body[^>]*>(.*)</body>',h,re.S).group(1)
 entry=('<title>Ground &amp; Mother</title>\n'
        '<link rel="stylesheet" href="assets/site.css"/>\n'
        '<script>try{if(localStorage.getItem("gm_locale")==="es"){location.replace("es/index.html")}}catch(e){}document.documentElement.lang="en";document.documentElement.classList.add("js")</script>\n'
-       +body+'\n<script src="assets/preview.js"></script>\n')
+       +body+'\n<script src="assets/plate.js"></script>\n<script src="assets/preview.js"></script>\n')
 open(OUT+'/index.html','w').write(entry)
 files=[os.path.relpath(os.path.join(dp,fn),OUT) for dp,_,fns in os.walk(OUT) for fn in fns]
 print('files:',len(files))

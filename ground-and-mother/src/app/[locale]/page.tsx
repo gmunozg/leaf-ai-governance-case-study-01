@@ -19,6 +19,7 @@ import { StatusPill } from "@/components/StatusPill";
 import { SeedHero } from "@/components/SeedHero";
 import { RootLine, RootNote } from "@/components/RootLine";
 import { FoodJournal } from "@/components/FoodJournal";
+import { BotanicalPlate } from "@/components/BotanicalPlate";
 import { foods, foodSources } from "@/content/foods";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]">): Promise<Metadata> {
@@ -69,6 +70,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
 
       {/* 1 — The opening scene: seed, soil, roots */}
       <SeedHero copy={h.hero} />
+      <BotanicalPlate />
 
       <RootLine>
       {/* 2 — Brand statement */}

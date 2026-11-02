@@ -203,3 +203,16 @@ companion.groundandmother.com ─────┘  server checks has(email, produ
 - **Soil texture:** a procedural render (`scripts/render-soil.py`, 197 KB JPEG), not a photograph.
 - **Photography pipeline:** see PHOTOGRAPHY.md (`scripts/shot-list.mjs` regenerates it), `scripts/add-photo.mjs` and `src/content/photo-credits.json`.
 - **Interactive preview:** `scripts/preview/export.py` produces a static, interactive copy for sharing without a server.
+
+## 11. The botanical plate: one specimen, hero to footer
+
+`src/lib/plate.ts` (generator) and `src/lib/plate-runtime.ts` (mounting) draw a single continuous root specimen over the whole homepage, styled like an antique Materia Medica engraving: a double-contour taproot with side hatching, tapering laterals, root hairs, mycorrhizal hyphae and small Latin figure labels (Fig. 1–6, plus an enlarged root-tip roundel in the Library).
+
+- **Continuity:** the plate starts exactly where the hero's taproot leaves the opening scene (measured from the SVG), at the same width, and runs to the bottom of the footer.
+- **Built from the real layout:** the taproot is routed through whitespace and behind photographs, following a slow side-to-side sweep and avoiding text. Laterals stop when they meet text, and in the food journal they lean toward the photographs. Density increases with depth, and the system converges into a root network spreading across the footer, behind the wordmark.
+- **Legibility:** feathered paper masks clear every heading, paragraph, button and control. Roots disappear behind photographs. On dark bands the plate switches to pale ink. On phones, where content fills the width, the root stays continuous but very faint (about 13%) behind text and images.
+- **Scroll drawing:** each path draws from its own start point via `stroke-dashoffset`. Paths are grouped into vertical bands, so scrolling only restyles what is near the viewport. Growth never reverses.
+- **Rendering:** the plate is stacked tiles of 1,800px, because browsers won't rasterise a single 14,000px-tall mask. It rebuilds on resize and after fonts load, and corrects measurements for elements that are still mid-reveal.
+- **Reduced motion:** the plate is fully drawn and static. No-JS visitors don't see it; it's purely decorative and `aria-hidden`.
+- **Performance:** about 3,800 elements on desktop and 1,400 on mobile. Scrolling held 60fps in tests, including with mobile CPU throttled 4×.
+- **Static preview:** the preview bundles the same runtime (`scripts/preview/plate.js`, built with esbuild from `plate-entry.ts`).

@@ -1,43 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { spinePath } from "@/lib/roots";
 
-const SPINE = spinePath(5, 60, 1000);
-
-/**
- * The root that connects the homepage: a single living line in the left margin that grows
- * with the reader's progress through the story. Purely visual (aria-hidden); the botanical
- * notes placed along it are real buttons.
- */
+/** Wraps the homepage story; the botanical plate (BotanicalPlate) draws the continuous root. */
 export function RootLine({ children }: { children: React.ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { el.style.setProperty("--g", "1"); return; }
-    let raf = 0;
-    const update = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const r = el.getBoundingClientRect();
-        const g = Math.min(1, Math.max(0, (window.innerHeight * 0.8 - r.top) / r.height));
-        el.style.setProperty("--g", g.toFixed(4));
-      });
-    };
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => { window.removeEventListener("scroll", update); window.removeEventListener("resize", update); cancelAnimationFrame(raf); };
-  }, []);
   return (
-    <div className="rootline" ref={ref}>
-      <svg className="rootline__svg" viewBox="0 0 60 1000" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-        <path className="rootline__main" d={SPINE.main} pathLength={1} vectorEffect="non-scaling-stroke" />
-        {SPINE.laterals.map((d, i) => (
-          <path key={i} className="rootline__lat" d={d} pathLength={1} vectorEffect="non-scaling-stroke" style={{ "--at": (i + 1) / (SPINE.laterals.length + 1) } as React.CSSProperties} />
-        ))}
-      </svg>
+    <div className="rootline">
       {children}
     </div>
   );
