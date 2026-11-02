@@ -162,6 +162,19 @@ const es: Dictionary = {
       { verb: "Creamos", body: "Guías, imprimibles y herramientas interactivas para la cocina, diseñadas con el mismo cuidado que los textos." },
       { verb: "Reunimos", body: "Tradiciones culinarias de muchas cocinas, leídas con atención y traducidas a semanas corrientes." },
     ],
+    table: {
+      kicker: "Ground & Mother",
+      title: "La mesa",
+      sub: "Donde empieza la nutrición.",
+      cue: "Desliza para poner la mesa",
+      plan: "Plan de estilismo · fotografía en producción",
+      steps: { mother: "I", firstFoods: "II", firstYears: "III", library: "IV" },
+      library: {
+        title: "Recetas, notas y ensayos para tener junto a los fogones.",
+        body: "La Biblioteca de la Nutrición es donde lo escribimos todo: los alimentos, las tradiciones que hay detrás y las formas de cocinarlos para cada edad de la mesa.",
+      },
+      final: { kicker: "La mesa entera" },
+    },
     hero: {
       kicker: "Un diario de alimentación materna y de los primeros años",
       title: ["Nutrición profunda", "desde el", "principio."],

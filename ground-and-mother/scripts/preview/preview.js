@@ -256,8 +256,8 @@
     a.addEventListener("click", function () { try { localStorage.setItem("gm_locale", a.getAttribute("hreflang")); } catch (e) {} });
   });
 
-  /* The continuous botanical plate (home page) */
-  if (window.GMPlate && d.querySelector(".seed-hero")) window.GMPlate.mountPlate();
+  /* The Table (home page) */
+  if (window.GMTable && d.querySelector("[data-table]")) window.GMTable.mountTable();
 
   /* Forms have nowhere to submit in the preview */
   d.querySelectorAll("form").forEach(function (f) { f.addEventListener("submit", function (e) { e.preventDefault(); }); });

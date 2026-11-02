@@ -10,16 +10,13 @@ import { toCard } from "@/lib/product-view";
 import { Media } from "@/components/Media";
 import { Words } from "@/components/Words";
 import { Arrow } from "@/components/Arrow";
-import { PillarIndex } from "@/components/PillarIndex";
 import { Marquee } from "@/components/Marquee";
 import { ProductCard } from "@/components/ProductCard";
 import { Newsletter } from "@/components/Newsletter";
 import { JsonLd } from "@/components/JsonLd";
 import { StatusPill } from "@/components/StatusPill";
-import { SeedHero } from "@/components/SeedHero";
-import { RootLine, RootNote } from "@/components/RootLine";
 import { FoodJournal } from "@/components/FoodJournal";
-import { BotanicalPlate } from "@/components/BotanicalPlate";
+import { TableStage } from "@/components/TableStage";
 import { foods, foodSources } from "@/content/foods";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]">): Promise<Metadata> {
@@ -44,20 +41,20 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
   const apps = getPublishedProducts().filter((p) => p.type === "app");
   const companion = getProduct("first-foods-companion");
 
-  const pillarRows = (["mother", "first-foods", "first-years"] as const).map((k) => ({
-    href: L(`/${k}`),
-    numeral: d.pillars[k].numeral,
-    title: d.pillars[k].title,
-    meta: d.pillars[k].lede,
-    tone: ({ mother: "sage", "first-foods": "yolk", "first-years": "clay" } as const)[k],
-    brief: d.pillars[k].imageBrief,
-  }));
-
-  const note = (k: "radicle" | "hairs" | "myco" | "cotyledon") => (
-    <RootNote id={k} label={h.notes.label} term={h.notes[k].term} body={h.notes[k].body} closeLabel={h.notes.close} />
+  const tb = h.table;
+  const scene = (id: string, step: string | null, kicker: string, title: React.ReactNode, body: string, cta?: React.ReactNode) => (
+    <section className="tb-scene" data-tb-scene={id} aria-labelledby={`tb-${id}`}>
+      <div className="tb-panel">
+        <p className="label clay">{step ? <span className="tb-step">{step}</span> : null}{kicker}</p>
+        <h2 id={`tb-${id}`} className="tb-title">{title}</h2>
+        <p className="tb-text">{body}</p>
+        {cta}
+      </div>
+    </section>
   );
-  const cycleTones = ["clay", "sage", "linen", "yolk"] as const;
-  const cycleMotifs = ["pot", "jars", "bowl", "fruit"] as const;
+  const chapterLink = (k: string, label: string) => (
+    <Link href={L(`/${k}`)} className="text-link"><span className="ul-in">{label}</span><Arrow /></Link>
+  );
 
   return (
     <>
@@ -68,51 +65,37 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         ]}
       />
 
-      {/* 1 — The opening scene: seed, soil, roots */}
-      <SeedHero copy={h.hero} />
-      <BotanicalPlate />
-
-      <RootLine>
-      {/* 2 — Brand statement */}
-      <section className="section" aria-label={h.introKicker}>
-        {note("radicle")}
-        <div className="wrap statement-wrap">
-          <p className="label clay" data-reveal>{d.meta.tagline}</p>
-          <p className="h1 statement" data-reveal="words" style={{ maxWidth: "24ch" }}>
-            <Words text={h.statement} />
-          </p>
+      {/* The Table — one overhead table that fills as the visitor scrolls */}
+      <div className="tb" data-table>
+        <TableStage locale={locale} planLabel={tb.plan} />
+        <div className="tb-scenes">
+          <section className="tb-scene tb-scene--hero" data-tb-scene="hero" aria-labelledby="hero-title">
+            <div className="tb-panel">
+              <p className="label clay">{tb.kicker}</p>
+              <h1 id="hero-title" className="tb-hero-title">{tb.title}</h1>
+              <p className="tb-sub">{tb.sub}</p>
+              <p className="tb-text">{h.hero.body}</p>
+              <div className="hero__ctas">
+                <Link href={L("/library")} className="btn"><span>{h.heroCta}</span><Arrow /></Link>
+                <Link href={L("/shop")} className="btn btn--ghost"><span>{h.heroCta2}</span></Link>
+              </div>
+              <p className="label muted tb-cue"><span className="cue-line" aria-hidden="true" />{tb.cue}</p>
+            </div>
+          </section>
+          {scene("mother", tb.steps.mother, d.pillars.mother.kicker, d.pillars.mother.title, d.pillars.mother.lede + " " + d.pillars.mother.intro.split(". ").slice(0, 1).join(". ") + ".", chapterLink("mother", d.common.readMore))}
+          {scene("firstFoods", tb.steps.firstFoods, d.pillars["first-foods"].kicker, d.pillars["first-foods"].title, d.pillars["first-foods"].lede + " " + d.pillars["first-foods"].intro.split(". ").slice(0, 1).join(". ") + ".", chapterLink("first-foods", d.common.readMore))}
+          {scene("firstYears", tb.steps.firstYears, d.pillars["first-years"].kicker, d.pillars["first-years"].title, d.pillars["first-years"].lede + " " + d.pillars["first-years"].intro.split(". ").slice(0, 1).join(". ") + ".", chapterLink("first-years", d.common.readMore))}
+          {scene("library", tb.steps.library, d.nav.libraryFull, tb.library.title, tb.library.body, chapterLink("library", d.common.visitLibrary))}
+          {scene("final", null, tb.final.kicker, h.closingTitle, h.closingBody,
+            <div className="hero__ctas">
+              <Link href={L("/library")} className="btn"><span>{d.common.visitLibrary}</span><Arrow /></Link>
+              <Link href={L("/shop")} className="btn btn--ghost"><span>{d.common.visitShop}</span></Link>
+            </div>)}
         </div>
-      </section>
+      </div>
 
-      {/* 3 — The nourishment cycle */}
-      <section className="section--tight cycle" aria-labelledby="cycle-title">
-        <div className="wrap">
-          <div className="kicker-row"><span className="label">{h.cycle.kicker}</span><span className="label muted">I — IV</span></div>
-          <div className="cycle__head">
-            <h2 id="cycle-title" className="h1" data-reveal>{h.cycle.title}</h2>
-            <p className="lede muted" data-reveal>{h.cycle.intro}</p>
-          </div>
-          <div className="cycle__track">
-            <svg className="cycle__line" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true" data-reveal="draw">
-              <path d="M0 30 C120 6 200 52 330 30 S560 8 670 30 S880 54 1000 26" pathLength={1} vectorEffect="non-scaling-stroke" />
-            </svg>
-            <ol className="cycle__steps">
-              {h.cycle.steps.map((st, i) => (
-                <li key={st.name} className="cycle__step" data-reveal style={{ "--d": i * 140 } as React.CSSProperties}>
-                  <Media tone={cycleTones[i]} motif={cycleMotifs[i]} locale={locale} ratio={i % 2 ? "square" : "portrait"} placeholderLabel={ph} brief={st.brief} compact sizes="(min-width: 1024px) 22vw, 45vw" />
-                  <span className="cycle__num numeral" aria-hidden="true">{["I", "II", "III", "IV"][i]}</span>
-                  <h3 className="h3">{st.name}</h3>
-                  <p className="muted">{st.body}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-      </section>
-
-      {/* 4 — The food journal */}
+      {/* The food journal */}
       <section className="section fj" aria-labelledby="fj-heading">
-        {note("hairs")}
         <div className="wrap">
           <div className="kicker-row"><span className="label">{h.food.kicker}</span><span className="label muted">I — VIII</span></div>
           <div className="fj-head">
@@ -129,24 +112,10 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         </div>
       </section>
 
-      {/* 5 — Three editorial chapters */}
-      <section className="section" aria-labelledby="pillars-title">
-        {note("myco")}
-        <div className="wrap">
-          <div className="kicker-row">
-            <span className="label">{h.pillarsKicker}</span>
-            <span className="label muted">I — III</span>
-          </div>
-          <h2 id="pillars-title" className="h2" style={{ maxWidth: "20ch", marginBottom: "clamp(2.5rem, 5vw, 4rem)" }} data-reveal>{h.pillarsTitle}</h2>
-          <PillarIndex rows={pillarRows} locale={locale} placeholderLabel={ph} />
-        </div>
-      </section>
-
       <Marquee items={h.marquee} />
 
-      {/* 5 — The Nourishment Library */}
+      {/* The Nourishment Library */}
       <section className="section" aria-labelledby="lib-title">
-        {note("cotyledon")}
         <div className="wrap">
           <div className="kicker-row">
             <span className="label">{h.libraryKicker}</span>
@@ -241,22 +210,8 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         </div>
       </section>
 
-      </RootLine>
-
-      {/* 9 — Newsletter */}
       <Newsletter dict={d} />
 
-      {/* 10 — Closing */}
-      <section className="section" aria-labelledby="closing-title">
-        <div className="wrap closing">
-          <h2 id="closing-title" className="mega" data-reveal="words"><Words text={h.closingTitle} /></h2>
-          <p className="lede muted prose" data-reveal>{h.closingBody}</p>
-          <div className="hero__ctas" style={{ justifyContent: "center" }} data-reveal>
-            <Link href={L("/library")} className="btn"><span>{d.common.visitLibrary}</span><Arrow /></Link>
-            <Link href={L("/shop")} className="btn btn--ghost"><span>{d.common.visitShop}</span></Link>
-          </div>
-        </div>
-      </section>
     </>
   );
 }

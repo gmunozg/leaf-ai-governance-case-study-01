@@ -184,35 +184,27 @@ companion.groundandmother.com ─────┘  server checks has(email, produ
 - No console errors.
 - JS ≈ 184 KB gzipped per page, which is mostly the React/Next runtime. Fonts are self-hosted with `unicode-range` subsetting.
 
-## 10. Phase 1: cinematic botanical homepage
+## 10. The Table (homepage concept)
 
-**Concept: the nourishment cycle.** From soil, to food, to mother, to child. The homepage is one continuous story held together by a growing root.
+The homepage is built around one dining table, seen **strictly from directly above**, that fills as the visitor scrolls. One table, one camera angle, one light, from the first screen to the last scene.
 
-- **Opening scene** (`SeedHero.tsx`): a seed resting in rendered soil. A sticky stage sits inside a 330svh section, so native scrolling is never hijacked. Scroll progress drives CSS variables for each stage: the seed coat cracks, the root system draws itself, the shoot rises, the seed leaves unfold, and the soil gives way to ivory with the caption "From soil, to food, to mother, to child."
-  - Desktop: the seed leans toward the pointer and a warm light follows it.
-  - Touch: dragging moves the light and tapping the seed makes it stir.
-  - Reduced motion and no-JS visitors get one static, fully grown composition.
-- **Root system** (`lib/roots.ts`): a deterministic generator applying simple plant rules (gravitropism, tapering by branch order, alternating laterals). Every segment gets its own time window, and growth is mapped to `stroke-dashoffset` through a single CSS variable, so there is one style write per frame.
-- **Root line** (`RootLine.tsx`): a single root in the left margin that grows with reading progress through the homepage, carrying four botanical notes (radicle, root hairs, mycorrhizae, cotyledons). On phones the notes become inline chips.
-- **Nourishment cycle band:** four steps (soil, food, mother, child) joined by a line that inks itself in.
-- **Food journal** (`FoodJournal.tsx`, `content/foods.ts`): eight plates in an asymmetric layout. Each opens a modal `<dialog>` with nutrition notes, tradition, kitchen use, a "try this" idea, safety notes where guidance varies, and real sources.
-  - Arrow keys and swipe move between entries; Escape closes and returns focus.
-  - All entries are in the HTML, so they are readable without JS and indexable.
-- **Header** switches to light text while it sits over the soil.
-- **Language choice** is remembered in a cookie (`gm_locale`) that `proxy.ts` honours for locale-less URLs.
-- **Soil texture:** a procedural render (`scripts/render-soil.py`, 197 KB JPEG), not a photograph.
-- **Photography pipeline:** see PHOTOGRAPHY.md (`scripts/shot-list.mjs` regenerates it), `scripts/add-photo.mjs` and `src/content/photo-credits.json`.
-- **Interactive preview:** `scripts/preview/export.py` produces a static, interactive copy for sharing without a server.
+| Scene | What is set down |
+|---|---|
+| I · Hero | Linen napkin, mother's plate, silver fork and knife, water glass, the baby's linen mat and small cup |
+| II · Mother | Her meal (soft eggs, greens, butter), a bowl of broth, bread and butter, a cup of tea |
+| III · First Foods | A small ceramic bowl, a baby spoon, a dish of first tastes |
+| IV · First Years | A child's plate, berries, little hands reaching in from the edge |
+| V · The Nourishment Library | Notebook, recipe card, a printed photograph, a pencil |
+| VI · Final | Jug of milk, garden flowers, salt; the camera rises to show the whole table |
 
-## 11. The botanical plate: one specimen, hero to footer
+**How it works**
+- **Content:** `src/content/table.ts` lists every object with its place in two compositions of the same table: portrait (900 × 1500 units, mother's place above the baby's) for phones, and landscape (1600 × 1000 units, side by side) for desktop. It also holds each object's photo brief and, once shot, its cut-out image.
+- **Runtime:** `src/lib/table.ts` is framework-free, and the static preview runs the same code.
+  - Scroll position maps to a continuous scene index.
+  - Each object is "set down" from the nearer table edge: it slides in, settles its rotation, lowers from a slight lift, and its contact shadow tightens. All of this reverses on scroll-up.
+  - The camera only pans and changes height. It never tilts or rotates.
+- **Markup and layout:** `src/components/TableStage.tsx` renders the stage. It is sticky behind the reading panels, which sit in a paper column on desktop and as paper panels below the table on phones.
+- **Reduced motion:** objects simply appear at each scene, and the camera stays on the whole table.
+- **Performance:** one transform for the camera, plus one CSS variable per moving object. Tests showed zero layout shift and 60fps on a 4×-throttled phone.
 
-`src/lib/plate.ts` (generator) and `src/lib/plate-runtime.ts` (mounting) draw a single continuous root specimen over the whole homepage, styled like an antique Materia Medica engraving: a double-contour taproot with side hatching, tapering laterals, root hairs, mycorrhizal hyphae and small Latin figure labels (Fig. 1–6, plus an enlarged root-tip roundel in the Library).
-
-- **Continuity:** the plate starts exactly where the hero's taproot leaves the opening scene (measured from the SVG), at the same width, and runs to the bottom of the footer.
-- **Built from the real layout:** the taproot is routed through whitespace and behind photographs, following a slow side-to-side sweep and avoiding text. Laterals stop when they meet text, and in the food journal they lean toward the photographs. Density increases with depth, and the system converges into a root network spreading across the footer, behind the wordmark.
-- **Legibility:** feathered paper masks clear every heading, paragraph, button and control. Roots disappear behind photographs. On dark bands the plate switches to pale ink. On phones, where content fills the width, the root stays continuous but very faint (about 13%) behind text and images.
-- **Scroll drawing:** each path draws from its own start point via `stroke-dashoffset`. Paths are grouped into vertical bands, so scrolling only restyles what is near the viewport. Growth never reverses.
-- **Rendering:** the plate is stacked tiles of 1,800px, because browsers won't rasterise a single 14,000px-tall mask. It rebuilds on resize and after fonts load, and corrects measurements for elements that are still mid-reveal.
-- **Reduced motion:** the plate is fully drawn and static. No-JS visitors don't see it; it's purely decorative and `aria-hidden`.
-- **Performance:** about 3,800 elements on desktop and 1,400 on mobile. Scrolling held 60fps in tests, including with mobile CPU throttled 4×.
-- **Static preview:** the preview bundles the same runtime (`scripts/preview/plate.js`, built with esbuild from `plate-entry.ts`).
+**Photography:** none of the 24 objects has a photograph yet, so each shows a clearly labelled styling-plan marker in its exact place. PHOTOGRAPHY.md (from `node scripts/shot-list.mjs`) is the shoot brief: a fixed overhead rig, window light from the upper left, one empty-table plate, and every object shot in place and cut out. Setting `image` on an object swaps its marker for the photograph, with no other change needed.

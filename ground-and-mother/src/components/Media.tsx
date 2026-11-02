@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { Image as Img, Tone } from "@/content/products";
 import type { Locale } from "@/i18n/config";
-import { StillLife, toneMotif, type Motif } from "./StillLife";
+import type { Motif } from "./StillLife";
 
 type Props = {
   image?: Img | null;
@@ -39,7 +39,6 @@ export function Media({ image, tone, locale, brief, placeholderLabel, ratio = "p
           <Image src={image.src} alt={decorative ? "" : image.alt[locale]} fill sizes={sizes} priority={priority} style={{ objectFit: "cover" }} />
         ) : (
           <div className={`ph ph--${tone}${compact ? " ph--compact" : ""}`} {...(decorative ? { "aria-hidden": true } : { role: "img", "aria-label": `${placeholderLabel}${brief ? `: ${brief}` : ""}` })}>
-            <StillLife className="ph__still" motif={motif ?? toneMotif[tone]} />
             <div className="ph__label" aria-hidden="true">
               <span className="label">{placeholderLabel}</span>
               {brief ? <span className="ph__brief">{brief}</span> : null}

@@ -158,6 +158,19 @@ const en = {
       { verb: "We make", body: "Guides, printables and interactive tools for the kitchen, designed with the same care as the writing." },
       { verb: "We gather", body: "Traditional foodways from many kitchens, read closely and translated into ordinary weeks." },
     ],
+    table: {
+      kicker: "Ground & Mother",
+      title: "The Table",
+      sub: "Where nourishment begins.",
+      cue: "Scroll to lay the table",
+      plan: "Styling plan · photography in production",
+      steps: { mother: "I", firstFoods: "II", firstYears: "III", library: "IV" },
+      library: {
+        title: "Recipes, notes and essays to keep beside the stove.",
+        body: "The Nourishment Library is where we write it all down: the foods, the traditions behind them and the ways to cook them for every age at the table.",
+      },
+      final: { kicker: "The whole table" },
+    },
     hero: {
       kicker: "A journal of maternal & early-life nourishment",
       title: ["Deep nourishment", "from the very", "beginning."],

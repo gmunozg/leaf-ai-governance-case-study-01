@@ -6,7 +6,6 @@ import type { Tone } from "@/content/products";
 import type { Locale } from "@/i18n/config";
 import { Media } from "./Media";
 import { Arrow } from "./Arrow";
-import { StillLife, toneMotif } from "./StillLife";
 
 type Row = { href: string; numeral: string; title: string; meta: string; tone: Tone; brief: string };
 
@@ -37,7 +36,6 @@ export function PillarIndex({ rows, locale, placeholderLabel }: { rows: Row[]; l
         {rows.map((r, i) => (
           <div key={r.href} className="media" data-active={active === i}>
             <div className={`ph ph--${r.tone} ph--compact`}>
-              <StillLife className="ph__still" motif={toneMotif[r.tone]} />
               <div className="ph__label"><span className="label">{placeholderLabel}</span></div>
             </div>
           </div>

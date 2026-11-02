@@ -11,7 +11,7 @@ import { site } from "@/content/site";
 import { anyPurchasable } from "@/content/products";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { RevealObserver, SprigCursor } from "@/components/Motion";
+import { RevealObserver } from "@/components/Motion";
 
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -66,7 +66,6 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
         />
         <main id="main" tabIndex={-1}>{children}</main>
         <Footer locale={locale} dict={d} />
-        <SprigCursor />
         <RevealObserver />
         {/* Official Gumroad overlay script — loaded once, and only when something is actually for sale. */}
         {anyPurchasable() ? <Script id="gumroad-js" src={site.gumroad.scriptSrc} strategy="lazyOnload" /> : null}
