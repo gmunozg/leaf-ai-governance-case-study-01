@@ -183,3 +183,23 @@ companion.groundandmother.com ─────┘  server checks has(email, produ
 - API routes return honest errors when not configured (`503`, `404`, `400`).
 - No console errors.
 - JS ≈ 184 KB gzipped per page, which is mostly the React/Next runtime. Fonts are self-hosted with `unicode-range` subsetting.
+
+## 10. Phase 1: cinematic botanical homepage
+
+**Concept: the nourishment cycle.** From soil, to food, to mother, to child. The homepage is one continuous story held together by a growing root.
+
+- **Opening scene** (`SeedHero.tsx`): a seed resting in rendered soil. A sticky stage sits inside a 330svh section, so native scrolling is never hijacked. Scroll progress drives CSS variables for each stage: the seed coat cracks, the root system draws itself, the shoot rises, the seed leaves unfold, and the soil gives way to ivory with the caption "From soil, to food, to mother, to child."
+  - Desktop: the seed leans toward the pointer and a warm light follows it.
+  - Touch: dragging moves the light and tapping the seed makes it stir.
+  - Reduced motion and no-JS visitors get one static, fully grown composition.
+- **Root system** (`lib/roots.ts`): a deterministic generator applying simple plant rules (gravitropism, tapering by branch order, alternating laterals). Every segment gets its own time window, and growth is mapped to `stroke-dashoffset` through a single CSS variable, so there is one style write per frame.
+- **Root line** (`RootLine.tsx`): a single root in the left margin that grows with reading progress through the homepage, carrying four botanical notes (radicle, root hairs, mycorrhizae, cotyledons). On phones the notes become inline chips.
+- **Nourishment cycle band:** four steps (soil, food, mother, child) joined by a line that inks itself in.
+- **Food journal** (`FoodJournal.tsx`, `content/foods.ts`): eight plates in an asymmetric layout. Each opens a modal `<dialog>` with nutrition notes, tradition, kitchen use, a "try this" idea, safety notes where guidance varies, and real sources.
+  - Arrow keys and swipe move between entries; Escape closes and returns focus.
+  - All entries are in the HTML, so they are readable without JS and indexable.
+- **Header** switches to light text while it sits over the soil.
+- **Language choice** is remembered in a cookie (`gm_locale`) that `proxy.ts` honours for locale-less URLs.
+- **Soil texture:** a procedural render (`scripts/render-soil.py`, 197 KB JPEG), not a photograph.
+- **Photography pipeline:** see PHOTOGRAPHY.md (`scripts/shot-list.mjs` regenerates it), `scripts/add-photo.mjs` and `src/content/photo-credits.json`.
+- **Interactive preview:** `scripts/preview/export.py` produces a static, interactive copy for sharing without a server.

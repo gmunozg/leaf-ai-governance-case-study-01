@@ -19,13 +19,15 @@ type Props = {
   compact?: boolean;
   /** Which still life the placeholder draws; defaults to the tone's motif. */
   motif?: Motif;
+  /** Hide from assistive tech when a surrounding control already names the content. */
+  decorative?: boolean;
 };
 
 /**
  * Photography slot. Renders the real photograph when one is configured, otherwise a clearly
  * labelled placeholder that carries the art-direction brief — never passed off as brand photography.
  */
-export function Media({ image, tone, locale, brief, placeholderLabel, ratio = "portrait", className = "", sizes = "100vw", priority, reveal = true, delay = 0, compact, motif }: Props) {
+export function Media({ image, tone, locale, brief, placeholderLabel, ratio = "portrait", className = "", sizes = "100vw", priority, reveal = true, delay = 0, compact, motif, decorative }: Props) {
   return (
     <div
       className={`media ratio-${ratio} ${className}`}
@@ -34,9 +36,9 @@ export function Media({ image, tone, locale, brief, placeholderLabel, ratio = "p
     >
       <div className="media-inner">
         {image ? (
-          <Image src={image.src} alt={image.alt[locale]} fill sizes={sizes} priority={priority} style={{ objectFit: "cover" }} />
+          <Image src={image.src} alt={decorative ? "" : image.alt[locale]} fill sizes={sizes} priority={priority} style={{ objectFit: "cover" }} />
         ) : (
-          <div className={`ph ph--${tone}${compact ? " ph--compact" : ""}`} role="img" aria-label={`${placeholderLabel}${brief ? `: ${brief}` : ""}`}>
+          <div className={`ph ph--${tone}${compact ? " ph--compact" : ""}`} {...(decorative ? { "aria-hidden": true } : { role: "img", "aria-label": `${placeholderLabel}${brief ? `: ${brief}` : ""}` })}>
             <StillLife className="ph__still" motif={motif ?? toneMotif[tone]} />
             <div className="ph__label" aria-hidden="true">
               <span className="label">{placeholderLabel}</span>

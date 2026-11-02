@@ -23,6 +23,7 @@ export function Header({ locale, items, labels }: Props) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [dark, setDark] = useState(false);
   const lastY = useRef(0);
   const btnRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -38,6 +39,13 @@ export function Header({ locale, items, labels }: Props) {
       raf = requestAnimationFrame(() => {
         const y = window.scrollY;
         setScrolled(y > 24);
+        // Light header while it sits over the dark soil of the opening scene.
+        const hero = document.querySelector<HTMLElement>(".seed-hero");
+        if (hero) {
+          const r = hero.getBoundingClientRect();
+          const ivory = parseFloat(getComputedStyle(hero).getPropertyValue("--ivory")) || 0;
+          setDark(r.bottom > 72 && ivory < 0.5);
+        } else setDark(false);
         setHidden(y > 320 && y > lastY.current + 4);
         if (y < lastY.current - 4 || y < 320) setHidden(false);
         lastY.current = y;
@@ -45,11 +53,13 @@ export function Header({ locale, items, labels }: Props) {
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [pathname]);
 
   // Mobile menu: lock scroll, close on Escape, keep focus inside.
   useEffect(() => {
@@ -84,7 +94,8 @@ export function Header({ locale, items, labels }: Props) {
       {locales.map((l, i) => (
         <span key={l} style={{ display: "contents" }}>
           {i > 0 ? <span className="sep" aria-hidden="true">/</span> : null}
-          <Link href={swapLocale(pathname, l)} hrefLang={localeMeta[l].htmlLang} lang={localeMeta[l].htmlLang} aria-current={l === locale ? "true" : undefined} aria-label={localeMeta[l].label}>
+          <Link href={swapLocale(pathname, l)} hrefLang={localeMeta[l].htmlLang} lang={localeMeta[l].htmlLang} aria-current={l === locale ? "true" : undefined} aria-label={localeMeta[l].label}
+            onClick={() => { try { document.cookie = `gm_locale=${l}; path=/; max-age=31536000; samesite=lax`; } catch {} }}>
             {localeMeta[l].short}
           </Link>
         </span>
@@ -94,7 +105,7 @@ export function Header({ locale, items, labels }: Props) {
 
   return (
     <>
-      <header className="site-header" data-scrolled={scrolled} data-hidden={hidden && !open} data-menu={open}>
+      <header className="site-header" data-scrolled={scrolled} data-hidden={hidden && !open} data-menu={open} data-dark={dark && !open}>
         <div className="wrap site-header__inner">
           <Link href={`/${locale}`} className="wordmark" aria-label={`Ground & Mother — ${labels.home}`}>
             Ground<span className="amp">&amp;</span>Mother

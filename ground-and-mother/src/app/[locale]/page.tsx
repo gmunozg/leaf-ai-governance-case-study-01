@@ -16,6 +16,10 @@ import { ProductCard } from "@/components/ProductCard";
 import { Newsletter } from "@/components/Newsletter";
 import { JsonLd } from "@/components/JsonLd";
 import { StatusPill } from "@/components/StatusPill";
+import { SeedHero } from "@/components/SeedHero";
+import { RootLine, RootNote } from "@/components/RootLine";
+import { FoodJournal } from "@/components/FoodJournal";
+import { foods, foodSources } from "@/content/foods";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;
@@ -48,7 +52,11 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
     brief: d.pillars[k].imageBrief,
   }));
 
-  let wordIndex = 0;
+  const note = (k: "radicle" | "hairs" | "myco" | "cotyledon") => (
+    <RootNote id={k} label={h.notes.label} term={h.notes[k].term} body={h.notes[k].body} closeLabel={h.notes.close} />
+  );
+  const cycleTones = ["clay", "sage", "linen", "yolk"] as const;
+  const cycleMotifs = ["pot", "jars", "bowl", "fruit"] as const;
 
   return (
     <>
@@ -59,44 +67,13 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         ]}
       />
 
-      {/* 1 — Hero */}
-      <section className="hero" aria-labelledby="hero-title">
-        <div className="wrap">
-          <div className="hero__masthead label" data-reveal="rule">
-            <span>{h.heroKicker}</span>
-            <span className="muted">{d.nav.mother} · {d.nav.firstFoods} · {d.nav.firstYears}</span>
-            <span className="muted">{d.nav.libraryFull}</span>
-          </div>
-          <h1 id="hero-title" className="mega hero__title" data-reveal="words">
-            {h.heroTitle.map((line, i) => {
-              const el = (
-                <span key={i} className="line">
-                  <Words text={line} start={wordIndex} />
-                </span>
-              );
-              wordIndex += line.split(" ").length;
-              return el;
-            })}
-          </h1>
-          <div className="hero__grid">
-            <div className="hero__body">
-              <p className="lede prose" data-reveal style={{ "--d": 500 } as React.CSSProperties}>{h.heroBody}</p>
-              <div className="hero__ctas" data-reveal style={{ "--d": 650 } as React.CSSProperties}>
-                <Link href={L("/library")} className="btn"><span>{h.heroCta}</span><Arrow /></Link>
-                <Link href={L("/shop")} className="btn btn--ghost"><span>{h.heroCta2}</span></Link>
-              </div>
-            </div>
-            <div className="hero__collage">
-              <Media className="c1" tone="broth" locale={locale} ratio="portrait" placeholderLabel={ph} brief={locale === "es" ? "Manos partiendo pan junto a un cuenco de caldo, luz de ventana, grano de película." : "Hands tearing bread beside a bowl of broth, window light, film grain."} priority sizes="(min-width: 1024px) 34vw, 55vw" delay={200} />
-              <Media className="c2" tone="sage" locale={locale} ratio="square" placeholderLabel={ph} compact sizes="(min-width: 1024px) 20vw, 40vw" delay={420} />
-              <Media className="c3" tone="yolk" locale={locale} ratio="land" placeholderLabel={ph} compact sizes="(min-width: 1024px) 24vw, 45vw" delay={600} />
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 1 — The opening scene: seed, soil, roots */}
+      <SeedHero copy={h.hero} />
 
+      <RootLine>
       {/* 2 — Brand statement */}
       <section className="section" aria-label={h.introKicker}>
+        {note("radicle")}
         <div className="wrap statement-wrap">
           <p className="label clay" data-reveal>{d.meta.tagline}</p>
           <p className="h1 statement" data-reveal="words" style={{ maxWidth: "24ch" }}>
@@ -105,23 +82,54 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         </div>
       </section>
 
-      {/* 3 — What we do */}
-      <section className="section--tight" aria-labelledby="what-title">
+      {/* 3 — The nourishment cycle */}
+      <section className="section--tight cycle" aria-labelledby="cycle-title">
         <div className="wrap">
-          <div className="kicker-row"><h2 id="what-title" className="label">{h.introKicker}</h2></div>
-          <div className="trio">
-            {h.intro.map((it, i) => (
-              <div key={it.verb} data-reveal style={{ "--d": i * 120 } as React.CSSProperties}>
-                <h3 className="h3">{it.verb}</h3>
-                <p className="muted" style={{ margin: 0 }}>{it.body}</p>
-              </div>
-            ))}
+          <div className="kicker-row"><span className="label">{h.cycle.kicker}</span><span className="label muted">I — IV</span></div>
+          <div className="cycle__head">
+            <h2 id="cycle-title" className="h1" data-reveal>{h.cycle.title}</h2>
+            <p className="lede muted" data-reveal>{h.cycle.intro}</p>
+          </div>
+          <div className="cycle__track">
+            <svg className="cycle__line" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true" data-reveal="draw">
+              <path d="M0 30 C120 6 200 52 330 30 S560 8 670 30 S880 54 1000 26" pathLength={1} vectorEffect="non-scaling-stroke" />
+            </svg>
+            <ol className="cycle__steps">
+              {h.cycle.steps.map((st, i) => (
+                <li key={st.name} className="cycle__step" data-reveal style={{ "--d": i * 140 } as React.CSSProperties}>
+                  <Media tone={cycleTones[i]} motif={cycleMotifs[i]} locale={locale} ratio={i % 2 ? "square" : "portrait"} placeholderLabel={ph} brief={st.brief} compact sizes="(min-width: 1024px) 22vw, 45vw" />
+                  <span className="cycle__num numeral" aria-hidden="true">{["I", "II", "III", "IV"][i]}</span>
+                  <h3 className="h3">{st.name}</h3>
+                  <p className="muted">{st.body}</p>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
 
-      {/* 4 — Three editorial chapters */}
+      {/* 4 — The food journal */}
+      <section className="section fj" aria-labelledby="fj-heading">
+        {note("hairs")}
+        <div className="wrap">
+          <div className="kicker-row"><span className="label">{h.food.kicker}</span><span className="label muted">I — VIII</span></div>
+          <div className="fj-head">
+            <h2 id="fj-heading" className="display" data-reveal>{h.food.title}</h2>
+            <p className="lede muted" data-reveal>{h.food.intro}</p>
+          </div>
+          <FoodJournal
+            items={foods.map((f) => ({ id: f.id, tone: f.tone, motif: f.motif, image: f.image, c: f.content[locale] }))}
+            labels={h.food}
+            sources={foodSources.map((s) => ({ label: s.label[locale], url: s.url }))}
+            locale={locale}
+            placeholderLabel={ph}
+          />
+        </div>
+      </section>
+
+      {/* 5 — Three editorial chapters */}
       <section className="section" aria-labelledby="pillars-title">
+        {note("myco")}
         <div className="wrap">
           <div className="kicker-row">
             <span className="label">{h.pillarsKicker}</span>
@@ -136,6 +144,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
 
       {/* 5 — The Nourishment Library */}
       <section className="section" aria-labelledby="lib-title">
+        {note("cotyledon")}
         <div className="wrap">
           <div className="kicker-row">
             <span className="label">{h.libraryKicker}</span>
@@ -229,6 +238,8 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
           </ol>
         </div>
       </section>
+
+      </RootLine>
 
       {/* 9 — Newsletter */}
       <Newsletter dict={d} />
