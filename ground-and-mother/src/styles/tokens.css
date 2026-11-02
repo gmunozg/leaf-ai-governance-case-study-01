@@ -1,0 +1,54 @@
+/*
+ * Ground & Mother — design tokens.
+ * Shared by the website and (by copying or packaging this file) every tiny app,
+ * so the whole ecosystem reads as one brand.
+ */
+:root {
+  /* Palette — paper, forest, soil. */
+  --gm-paper: #f2ece0;        /* natural paper: page ground */
+  --gm-ivory: #f9f5ec;        /* warm ivory: raised surfaces */
+  --gm-oat: #e6dccb;          /* deeper paper: bands, wells */
+  --gm-ink: #1c2a21;          /* forest-black: primary text */
+  --gm-forest: #26402f;       /* deep forest green: brand colour */
+  --gm-forest-deep: #172619;  /* night forest: dark sections */
+  --gm-sage: #8b977b;         /* muted sage: secondary accents */
+  --gm-sage-soft: #ccd0bb;    /* pale sage: tints */
+  --gm-earth: #6b4a33;        /* earthy brown */
+  --gm-clay: #9c4f2a;         /* terracotta: the one warm accent (AA on paper) */
+  --gm-yolk: #d8a23f;         /* yolk: tiny highlights only, never text on paper */
+  --gm-muted: #545e52;        /* secondary text (AA on paper and ivory) */
+  --gm-on-dark: #efe8da;      /* text on forest */
+  --gm-on-dark-muted: #b9bea9;
+  --gm-rule: rgb(28 42 33 / 0.16);
+  --gm-rule-strong: rgb(28 42 33 / 0.42);
+  --gm-rule-on-dark: rgb(239 232 218 / 0.18);
+
+  /* Type */
+  --gm-serif: "Fraunces Variable", "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --gm-sans: "Instrument Sans Variable", "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --gm-fs-mega: clamp(3.3rem, 11.2vw, 11rem);
+  --gm-fs-display: clamp(2.6rem, 7vw, 6.25rem);
+  --gm-fs-h1: clamp(2.3rem, 5.2vw, 4.5rem);
+  --gm-fs-h2: clamp(1.85rem, 3.6vw, 3.1rem);
+  --gm-fs-h3: clamp(1.3rem, 2vw, 1.75rem);
+  --gm-fs-lede: clamp(1.18rem, 1.7vw, 1.5rem);
+  --gm-fs-body: 1.0625rem;
+  --gm-fs-small: 0.9rem;
+  --gm-fs-label: 0.75rem;
+
+  /* Space — spacious editorial rhythm */
+  --gm-gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --gm-section: clamp(5rem, 12vw, 11rem);
+  --gm-max: 1440px;
+  --gm-measure: 62ch;
+
+  /* Motion */
+  --gm-ease: cubic-bezier(0.22, 1, 0.36, 1);     /* soft settle */
+  --gm-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --gm-fast: 180ms;
+  --gm-med: 420ms;
+  --gm-slow: 1100ms;
+
+  --gm-radius: 2px;
+}
