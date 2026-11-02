@@ -530,7 +530,7 @@ a:hover .media-inner, .media:hover .media-inner { transform: scale(1.035); }
   .js [data-reveal="rule"] { opacity: 1; transform: scaleX(0); transform-origin: left; transition: transform 1.4s var(--gm-ease-in-out); }
   .js [data-reveal="rule"].is-in { transform: none; }
 }
-.w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.w { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 0.08em 0.22em; margin: 0 -0.08em -0.22em; }
 .w > span { display: inline-block; }
 
 /* Page transition: a soft rise on every route change. */
